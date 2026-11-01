@@ -23,10 +23,10 @@ public class ScheduleService {
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
 
-    public ScheduleService(JdbcClient jdbcClient, StringRedisTemplate redisTemplate, ObjectMapper objectMapper) {
+    public ScheduleService(JdbcClient jdbcClient, StringRedisTemplate redisTemplate) {
         this.jdbcClient = jdbcClient;
         this.redisTemplate = redisTemplate;
-        this.objectMapper = objectMapper;
+        this.objectMapper = new ObjectMapper().findAndRegisterModules();
     }
 
     /**

@@ -9,9 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookingService {
 
     private final JdbcClient jdbcClient;
+    private final ScheduleService scheduleService;
 
-    public BookingService(JdbcClient jdbcClient) {
+    public BookingService(JdbcClient jdbcClient, ScheduleService scheduleService) {
         this.jdbcClient = jdbcClient;
+        this.scheduleService = scheduleService;
     }
 
     /**
@@ -48,6 +50,9 @@ public class BookingService {
                 .param("sessionId", request.classSessionId())
                 .param("userId", request.userId())
                 .update();
+
+        // Evict cached schedule in Redis so users immediately see updated availability
+        scheduleService.evictScheduleCache();
 
         return "Booking successful! Spot secured.";
     }
